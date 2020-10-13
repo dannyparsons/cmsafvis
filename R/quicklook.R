@@ -29,12 +29,12 @@
 #'
 #'## create some (non-realistic) example data
 #'
-#'lon <- seq(7, 13, 0.5)
-#'lat <- seq(47, 53, 0.5)
+#'lon <- seq(5, 15, 0.5)
+#'lat <- seq(45, 55, 0.5)
 #'time <- c(as.Date("2000-01-01"))
 #'origin <- as.Date("1983-01-01 00:00:00")
 #'time <- as.numeric(difftime(time, origin, units = "hour"))
-#'data <- array(1:169, dim = c(13, 13, 1))
+#'data <- array(1:441, dim = c(21, 21, 1))
 #'
 #'## create example NetCDF
 #'infile1 <- file.path(tempdir(), "SISmm200001010000003231000101MA.nc")

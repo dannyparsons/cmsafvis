@@ -1,6 +1,6 @@
-98c8b17b33667f077fa0f852f81c0e4d *DESCRIPTION
+8bb8f2470fef9f7d33169335e95ffd52 *DESCRIPTION
 31f64caa0271188d3d1ea6552a632115 *NAMESPACE
-bfdbe2c3b6ed19e0cfa824b57cfae2a6 *NEWS.md
+d7037dbe4fd08c2626d844f13a49f537 *NEWS.md
 26abb2275870fa064ae40af37a8e632e *R/ColorspacePrivates.R
 c77a24c9bb5f600bb8201242fa510005 *R/absolute_map.R
 1c2b842d69dd77ab0627da0b502020aa *R/absolute_map_builder.R
@@ -41,7 +41,7 @@ a14d72be17d98c473e2b3c096cc8b881 *R/is_valid_countrycode.R
 639cd4bb7bc9963a10f1c326cea2eae3 *R/plot_fieldmean.R
 c1b4b81a33264856e15bdb2fe77773f5 *R/plot_fieldmean_and_map.R
 0b43a487909e6ad473821cfc801c085b *R/plot_labeling.R
-d91d4adb6cdf37d4aacb5f8876baa6c9 *R/quicklook.R
+b93c2477b5d41cf142cbf9e0fe7eabaf *R/quicklook.R
 8d0caf5284c4afcebfca868a838730bb *R/recalculateImageDimensions.R
 56ab6c5decea19474a8ef4ce8b8c3cb5 *R/release_questions.R
 a8a1a6e70b989adc5e6026fcf81c91f0 *R/render_hist_plot.R
@@ -50,7 +50,7 @@ fdcd2274971083ae4981304624b1ec1a *R/render_plot.R
 a4c477fac32cfd53fa8402afff5d5dc5 *R/render_plot_1d.R
 621e2d341e4cf2519c2c829ce3786181 *R/render_preview_plot.R
 c274703f0c41e2d780f77d634380901b *R/render_region_plot.R
-dea95dbf83030364b184eece2121c2d4 *R/set_time_locale.R
+58e006566a696bb1e44b7ead9d42abf3 *R/set_time_locale.R
 a1fef58e2e793e99011840fd0a5ce63c *R/sysdata.rda
 ef255d73a9190cde5d6df4073add9428 *inst/WORDLIST
 ecd5d32528f54448439f86274dc992be *inst/extdata/CMSAF_NoName_Black.png
@@ -65,7 +65,7 @@ b24a54f5639537cfea94cd3033696d08 *man/cmsafvis.Rd
 65a15d875e106749179b50c0dd3b833f *man/fieldmean_and_anomaly_map.Rd
 034c51804e232b68609dc6431c4e8880 *man/fieldmean_plot.Rd
 35104f255d569ac303934c04d3a91bec *man/monitor_climate.Rd
-87bb3d017efb763fff96296774f03bf2 *man/quicklook.Rd
+20cc4aad1c650826fcb80aee4667c34e *man/quicklook.Rd
 1efbef28e8e48d5eaa10c0356e163998 *man/recalculateImageDimensions.Rd
 2aa341a0af6f6342c1c4c3be3760afe6 *man/render_hist_plot.Rd
 65b0b815a9fa275f7ebad907cff2536c *man/render_instat_plot.Rd
@@ -75,4 +75,4 @@ c6dfa203ccc078b51d717fe41bd8463d *man/render_preview_plot.Rd
 51e0259048c78e1e3bc8bd0fa469e1d0 *man/render_region_plot.Rd
 9566921a96ff55c1a51b6eb898d25884 *tests/spelling.R
 2f3ea68643fae488db3b89bbb2f243df *tests/testthat.R
-fee0bed28764255e99167a638b6f265b *tests/testthat/test-set_time_locale.R
+4df3ff61e4d44ae77693d029ef9f7cc6 *tests/testthat/test-set_time_locale.R

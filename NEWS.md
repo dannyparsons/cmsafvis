@@ -2,6 +2,13 @@
 
 ## development
 
+## 1.0.1
+
+Published 2020-10-08
+
+- Fix rare bug occuring when a required locale is not installed on the system
+- Fix unit test failing on some systems on CRAN because of missing locale
+
 ## 1.0.0
 
 Published 2020-09-25
