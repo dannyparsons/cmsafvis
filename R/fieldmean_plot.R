@@ -1,8 +1,8 @@
 #' A 'cmsaf' extension for creating spatial mean plots.
 #'
 #' This plotting routine generates a graph showing the evolution of
-#' the spatial mean of a given variable within the given time range
-#' and area. The intended application is for daily accumulated data,
+#' the spatial mean of a given variable within the given time range 
+#' and area. The intended application is for daily accumulated data, 
 #' such as sunshine duration.
 #' Dependent on the output format a PNG or MP4 is created.
 #'
@@ -15,51 +15,6 @@
 #'
 #' @export
 #' @importFrom assertthat assert_that is.date is.dir is.flag is.number is.readable is.string is.writeable
-#' @examples
-#'## Create an example NetCDF file with a similar structure as used by CM
-#'## SAF. The file is created with the ncdf4 package.  Alternatively
-#'## example data can be freely downloaded here: <https://wui.cmsaf.eu/>
-#'
-#'library(ncdf4)
-#'
-#'## create some (non-realistic) example data
-#'
-#'lon <- seq(5, 15, 0.5)
-#'lat <- seq(45, 55, 0.5)
-#'time <- seq(as.Date("2010-01-01"), as.Date("2011-12-31"), "days")
-#'origin <- as.Date("1983-01-01 00:00:00")
-#'time <- as.numeric(difftime(time, origin, units = "hour"))
-#'data <- array(250:350, dim = c(21, 21, 2 * 365))
-#'
-#'## create example NetCDF
-#'infile <- tempfile("input", fileext = ".nc")
-#'
-#'x <- ncdim_def(name = "lon", units = "degrees_east", vals = lon)
-#'y <- ncdim_def(name = "lat", units = "degrees_north", vals = lat)
-#'t <- ncdim_def(name = "time", units = "hours since 1983-01-01 00:00:00",
-#'  vals = time, unlim = TRUE)
-#'var1 <- ncvar_def("SDU", "W m-2", list(x, y, t), -1, prec = "short")
-#'vars <- list(var1)
-#'ncnew <- nc_create(infile, vars)
-#'ncvar_put(ncnew, var1, data)
-#'ncatt_put(ncnew, "lon", "standard_name", "longitude", prec = "text")
-#'ncatt_put(ncnew, "lat", "standard_name", "latitude", prec = "text")
-#'nc_close(ncnew)
-#'
-#'## this will save 'output.png' in temp directory
-#'cmsafvis::fieldmean_plot(
-#'  accumulate = TRUE,
-#'  infile = infile,
-#'  out_dir = tempdir(),
-#'  climate_dir = tempdir(),
-#'  climate_year_start = 2010,
-#'  climate_year_end = 2011,
-#'  end_date = "2010-01-05",
-#'  outfile_name = "output",
-#'  output_format = "graphic",
-#'  keep_files = FALSE,
-#'  verbose = FALSE
-#')
 fieldmean_plot <- function(config = NULL,
                            variable = NULL,
                            accumulate = FALSE,
@@ -87,6 +42,7 @@ fieldmean_plot <- function(config = NULL,
                            states = FALSE,
                            attach = FALSE,
                            infile_attach = "auto",
+                           dwd_logo = FALSE,
                            verbose = TRUE) {
   # Call central argument parser
   arguments_necessary <- methods::formalArgs(parse_arguments)
@@ -124,8 +80,13 @@ fieldmean_plot <- function(config = NULL,
   attach <- parsedArguments$attach
   infile_attach <- parsedArguments$infile_attach
   new_infile <- parsedArguments$new_infile
+  dwd_logo <- parsedArguments$dwd_logo
   verbose <- parsedArguments$verbose
 
+  # check_infile_monitor_climate
+  # if(accumulate == FALSE)
+  #   stop("Creating a multi day graphic of non accumulated data is not possible. Please choose to accumulate the infile, or plot format 'animation', or select a single day in the date range")
+  
   if (attach) {
     attach_file(variable = variable,
                 infile = infile,
@@ -137,33 +98,33 @@ fieldmean_plot <- function(config = NULL,
     infile <- new_infile
   }
 
-  # If user wants to accumulate the file, we do so here.
-  finalInfile <- extractFinalOutfile(
-    variable = variable,
-    infile = infile,
-    start_date = start_date,
-    end_date = end_date,
-    accumulate = accumulate,
-    temp_dir = temp_dir,
-    verbose = verbose
-  )
+    # If user wants to accumulate the file, we do so here.
+    finalInfile <- extractFinalOutfile(
+      variable = variable,
+      infile = infile,
+      start_date = start_date,
+      end_date = end_date,
+      accumulate = accumulate,
+      temp_dir = temp_dir,
+      verbose = verbose
+    )
 
-  climatology_file <- calculate_climatology(
-    variable = variable,
-    climate_year_start = climate_year_start,
-    climate_year_end = climate_year_end,
-    start_date = start_date,
-    end_date = end_date,
-    country_code = country_code,
-    climate_dir = climate_dir,
-    infile = infile,
-    lon_min = lon_min,
-    lon_max = lon_max,
-    lat_min = lat_min,
-    lat_max = lat_max,
-    accumulate = accumulate,
-    verbose = verbose
-  )
+    climatology_file <- calculate_climatology(
+      variable = variable,
+      climate_year_start = climate_year_start,
+      climate_year_end = climate_year_end,
+      start_date = start_date,
+      end_date = end_date,
+      country_code = country_code,
+      climate_dir = climate_dir,
+      infile = infile,
+      lon_min = lon_min,
+      lon_max = lon_max,
+      lat_min = lat_min,
+      lat_max = lat_max,
+      accumulate = accumulate,
+      verbose = verbose
+    )
 
   if (is_country(country_code)) {
     mask_file <- create_country_mask(
@@ -274,6 +235,7 @@ fieldmean_plot <- function(config = NULL,
     freeze_animation = freeze_animation,
     outfile_name = outfile_name,
     adjustAccumulation = accumulate,
+    dwd_logo = dwd_logo,
     verbose = verbose
   )
 }

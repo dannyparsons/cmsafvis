@@ -8,6 +8,7 @@ anomaly_map(
   config = NULL,
   variable = NULL,
   accumulate = FALSE,
+  mean_value = FALSE,
   infile = NULL,
   temp_dir = tempdir(),
   out_dir = getwd(),
@@ -33,6 +34,7 @@ anomaly_map(
   states = FALSE,
   attach = FALSE,
   infile_attach = "auto",
+  dwd_logo = FALSE,
   verbose = TRUE
 )
 }
@@ -43,6 +45,8 @@ to specify all arguments. Each addressed argument has to be formatted according 
 \item{variable}{Name of variable in infile (\code{NULL} or character). If \code{NULL} then the first variable from the infile is taken.}
 
 \item{accumulate}{Whether the input file should be accumulated (logical).}
+
+\item{mean_value}{Whether the input file should be averaged (logical).}
 
 \item{infile}{Path to NetCDF file (\code{NULL} or character). If \code{NULL} then it needs to be specified in the config file.}
 
@@ -95,10 +99,12 @@ If false, all intermediate results are deleted, otherwise all are kept. Keeping 
 
 \item{states}{Whether to crop/plot administration level of states (logical).}
 
-\item{attach}{Whether to temporarily merge the infile to an already existing one. (logical).}
+\item{attach}{Whether to temporaly merge the infile to an already existing one. (logical).}
 
 \item{infile_attach}{File to attach the infile to. When 'auto', a suitable file will be searched in out_dir.
 If attach is false, this will be ignored(character).}
+
+\item{dwd_logo}{Whether to add the DWD logo (logical).}
 
 \item{verbose}{Whether to display progress messages (logical).}
 }
@@ -114,50 +120,4 @@ Argument prioritization is done in the following way:
 Direct argument > config argument > default argument.
 Thus, if you pass a existing config file but also want to modify a specific
 argument you can do that easily.
-}
-\examples{
-## Create an example NetCDF file with a similar structure as used by CM
-## SAF. The file is created with the ncdf4 package.  Alternatively
-## example data can be freely downloaded here: <https://wui.cmsaf.eu/>
-
-library(ncdf4)
-
-## create some (non-realistic) example data
-
-lon <- seq(5, 15, 0.5)
-lat <- seq(45, 55, 0.5)
-time <- seq(as.Date("2010-01-01"), as.Date("2011-12-31"), "days")
-origin <- as.Date("1983-01-01 00:00:00")
-time <- as.numeric(difftime(time, origin, units = "hour"))
-data <- array(250:350, dim = c(21, 21, 2 * 365))
-
-## create example NetCDF
-infile <- tempfile("input", fileext = ".nc")
-
-x <- ncdim_def(name = "lon", units = "degrees_east", vals = lon)
-y <- ncdim_def(name = "lat", units = "degrees_north", vals = lat)
-t <- ncdim_def(name = "time", units = "hours since 1983-01-01 00:00:00",
- vals = time, unlim = TRUE)
-var1 <- ncvar_def("SDU", "W m-2", list(x, y, t), -1, prec = "short")
-vars <- list(var1)
-ncnew <- nc_create(infile, vars)
-ncvar_put(ncnew, var1, data)
-ncatt_put(ncnew, "lon", "standard_name", "longitude", prec = "text")
-ncatt_put(ncnew, "lat", "standard_name", "latitude", prec = "text")
-nc_close(ncnew)
-
-## this will save 'output.png' in temp directory
-cmsafvis::anomaly_map(
- accumulate = TRUE,
- infile = infile,
- out_dir = tempdir(),
- climate_dir = tempdir(),
- climate_year_start = 2010,
- climate_year_end = 2011,
- end_date = "2010-01-05",
- outfile_name = "output",
- output_format = "graphic",
- keep_files = FALSE,
- verbose = FALSE
-)
 }

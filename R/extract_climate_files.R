@@ -6,6 +6,7 @@ extract_climate_files <- function(
   climate_year_start,
   climate_year_end,
   accumulate,
+  #mean_value = FALSE,
   verbose) {
   if (verbose) {
     pb <- progress::progress_bar$new(
@@ -41,7 +42,17 @@ extract_climate_files <- function(
           year,
           "timsum"))
       outfile <- file.path(climate_dir, outfile)
-    } else {
+    } 
+    # else if (mean_value)
+    # {
+    #   outfile <- add_ncdf_ext(
+    #     construct_filename(
+    #       variable,
+    #       year,
+    #       "timmean"))
+    #   outfile <- file.path(climate_dir, outfile)
+    # }
+    else {
       outfile <- yearlyFileRaw
     }
 
@@ -51,71 +62,74 @@ extract_climate_files <- function(
       }
     }
 
-    yearlyFileRaw_with_leap <- add_ncdf_ext(
-      construct_filename(
-        variable,
-        year,
-        "with_leap"))
-    yearlyFileRaw_with_leap <- file.path(climate_dir, yearlyFileRaw_with_leap)
-
-    # First extract all climate years
-    tryCatch({
-      cmsafops::selyear(
-        var = variable,
-        year = year,
-        infile = infile,
-        outfile = yearlyFileRaw_with_leap,
-        overwrite = TRUE
-      )
-    }, error = function(e) {
-      if (startsWith(deparse(sys.calls()[[sys.nframe() - 5]])[[1]], "merge_climatology")) {
-        stop(paste0("An error occured while extracting data for the year ", year, ".\nPlease make sure that the input file ", infile, " contains the required data or provide a climatology file for the selected region."))
-      } else {
-        stop(paste0("An error occured while extracting data for the year ", year, ".\nPlease make sure that the input file ", infile, " contains the required data."))
-      }
-    })
-
-    if (is_leap_year(year)) {
-      # Remove leap year dates
+    #if(!mean_value){  # if == TRUE: only do this with daily files 
+      yearlyFileRaw_with_leap <- add_ncdf_ext(
+        construct_filename(
+          variable,
+          year,
+          "with_leap"))
+      yearlyFileRaw_with_leap <- file.path(climate_dir, yearlyFileRaw_with_leap)
+  
+      # First extract all climate years
       tryCatch({
-        cmsafops::extract.period(
+        cmsafops::selyear(
           var = variable,
-          start = paste0(year, "-02-29"),
-          end = paste0(year, "-02-29"),
-          infile = yearlyFileRaw_with_leap,
-          outfile = yearlyFileRaw,
-          overwrite = TRUE)
+          year = year,
+          infile = infile,
+          outfile = yearlyFileRaw_with_leap,
+          overwrite = TRUE
+        )
       }, error = function(e) {
-        stop(paste0("An error occured while removing date ", year, "-02-29."))
+        if (startsWith(deparse(sys.calls()[[sys.nframe() - 5]])[[1]], "merge_climatology")) {
+          stop(paste0("An error occured while extracting data for the year ", year, ".\nPlease make sure that the input file ", infile, " contains the required data or provide a climatology file for the selected region."))
+        } else {
+          stop(paste0("An error occured while extracting data for the year ", year, ".\nPlease make sure that the input file ", infile, " contains the required data."))
+        }
       })
 
-      # Clean up non reusable file
-      if (file.exists(yearlyFileRaw_with_leap)) { file.remove(yearlyFileRaw_with_leap) }
-    } else {
-      if (!file.copy(from = yearlyFileRaw_with_leap, to = yearlyFileRaw, overwrite = TRUE)) {
-        stop(paste("Failed to copy", yearlyFileRaw_with_leap, "to", yearlyFileRaw))
+      if (is_leap_year(year)) {
+        # Remove leap year dates
+        tryCatch({
+          cmsafops::extract.period(
+            var = variable,
+            start = paste0(year, "-02-29"),
+            end = paste0(year, "-02-29"),
+            infile = yearlyFileRaw_with_leap,
+            outfile = yearlyFileRaw,
+            overwrite = TRUE)
+        }, error = function(e) {
+          stop(paste0("An error occured while removing date ", year, "-02-29."))
+        })
+  
+        # Clean up non reusable file
+        if (file.exists(yearlyFileRaw_with_leap)) { file.remove(yearlyFileRaw_with_leap) }
+      } else {
+        if (!file.copy(from = yearlyFileRaw_with_leap, to = yearlyFileRaw, overwrite = TRUE)) {
+          stop(paste("Failed to copy", yearlyFileRaw_with_leap, "to", yearlyFileRaw))
+        }
+        file.remove(yearlyFileRaw_with_leap)
       }
-      file.remove(yearlyFileRaw_with_leap)
-    }
+    
 
-    # Require that this file has 365 unique dates
-    nc_check <- ncdf4::nc_open(yearlyFileRaw)
-    unit_string <- ncdf4::ncatt_get(nc_check, "time", "units")$value
-    time_data <- ncdf4::ncvar_get(nc_check, "time")
-    ncdf4::nc_close(nc_check)
-
-    # Get relevant dates
-    check_dates <- as.Date(unique(cmsafops::get_time(unit_string, time_data)))
-
-    if (length(check_dates) != 365) {
-      stop(
-        paste0(
-          "Input file is missing dates of the year ", year, ".\n",
-          "It must contain every day of every year from ", climate_year_start, " to ", climate_year_end, "!"
+      # Require that this file has 365 unique dates
+      nc_check <- ncdf4::nc_open(yearlyFileRaw)
+      unit_string <- ncdf4::ncatt_get(nc_check, "time", "units")$value
+      time_data <- ncdf4::ncvar_get(nc_check, "time")
+      ncdf4::nc_close(nc_check)
+  
+      # Get relevant dates
+      check_dates <- as.Date(unique(cmsafops::get_time(unit_string, time_data)))
+  
+      if (length(check_dates) != 365) {
+        stop(
+          paste0(
+            "Input file is missing dates of the year ", year, ".\n",
+            "It must contain every day of every year from ", climate_year_start, " to ", climate_year_end, "!"
+            )
           )
-        )
-    }
-
+      }
+    #}
+    
     if (accumulate) {
       tryCatch({
         cmsafops::timcumsum(
@@ -133,8 +147,11 @@ extract_climate_files <- function(
       # Remove non-reusable files
       if (file.exists(yearlyFileRaw)) { file.remove(yearlyFileRaw) }
     }
+    
+    # if(mean_value)
+    # {
+    #   # TODO
+    # }
   }
-  if (verbose) {
-    pb$update(1)  # Finishes the progress bar
-  }
+  pb$update(1)  # Finishes the progress bar
 }

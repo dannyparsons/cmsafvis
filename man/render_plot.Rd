@@ -23,6 +23,7 @@ render_plot(
   num_rmax,
   num_brk,
   co.data,
+  co.data.compare.diff,
   proj,
   xort,
   yort,
@@ -85,6 +86,8 @@ If NULL is passed a file is created in the R session temporary directory.}
 
 \item{co.data}{Data to be plotted in R-Instat mode (data.frame).}
 
+\item{co.data.compare.diff}{Data to be plotted in compare data mode (data.frame).}
+
 \item{proj}{The chosen projection (either 'rect' for rectangular or 'ortho' for orthographic).}
 
 \item{xort}{Centering the globe at longitude xort (numeric). Only in orthographic mode.}
@@ -93,9 +96,9 @@ If NULL is passed a file is created in the R session temporary directory.}
 
 \item{rort}{Rotation of the globe (numeric). Only in orthographic mode.}
 
-\item{slider1}{Controling the horizontal plot position as vector of two values min and max (numeric).}
+\item{slider1}{Controlling the horizontal plot position as vector of two values min and max (numeric).}
 
-\item{slider2}{Controling the vertical plot position as vector of two values min and max (numeric).}
+\item{slider2}{Controlling the vertical plot position as vector of two values min and max (numeric).}
 
 \item{imagewidth}{Width of the image (numeric).}
 
@@ -131,76 +134,4 @@ If NULL is passed a file is created in the R session temporary directory.}
 }
 \description{
 This function renders a 2D image usually called by the CM SAF R Toolbox.
-}
-\examples{
-visualizeVariables <- list(
- plot_dim = 2,
- date.time = c(format(Sys.time(), format = "\%Y-\%m-\%d \%H:\%M:\%S")),
- data = array(1:4, dim = c(2,2)),
- min_lon = 6,
- max_lon = 9,
- min_lat = 49,
- max_lat = 52,
- lon = c(7, 8),
- lat = c(50, 51),
- vn = "VAR",
- varname = "Example var name",
- copyrightText = "Example Copyright",
- unit = "example unit"
-)
-
-palettes <- data.frame(
-  type = "qual",
-  h1 = 0,
-  h2 = 360,
-  c1 = 35,
-  c2 = NA,
-  l1 = 85,
-  l2 = NA,
-  p1 = NA,
-  p2 = NA,
-  cmax = NA,
-  fixup = 1
-)
-
-rownames(palettes) = "Pastel 1"
-
-render_plot(
- plot_rinstat = FALSE,
- visualizeVariables = visualizeVariables,
- visualizeDataTimestep = array(1:4, dim = c(2,2)),
- nc_path_visualize = NULL,
- visualizeDataMax = 4,
- lon_bounds = c(6, 9),
- lat_bounds = c(49, 52),
- timestep = c(format(Sys.time(), format = "\%Y-\%m-\%d")),
- num_tick = 4,
- num_rmin = 1,
- num_rmax = 4,
- num_brk = 2,
- co.data = NULL,
- proj = "rect",
- xort = 0,
- yort = 0,
- rort = 0,
- slider1 = c(6, 9),
- slider2 = c(49, 52),
- imagewidth = 800,
- imageheight = 800,
- location = FALSE,
- int = FALSE,
- text1 = "Text 1",
- text2 = "Text 2",
- text3 = "Text 3",
- textsize = 1.2,
- bordercolor = "gray20",
- linesize = 1.5,
- na.color = "gray80",
- PAL = "Pastel 1",
- palettes = palettes,
- reverse = FALSE,
- plot_grid = TRUE,
- grid_col = "cornsilk2"
-)
-
 }

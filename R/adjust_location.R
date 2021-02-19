@@ -7,8 +7,8 @@ adjust_location <- function(variable,
   if (is_country) {
     tryCatch(
       cmsafops::cmsaf.add(
-        vari1 = variable,
-        vari2 = variable_mask,
+        var1 = variable,
+        var2 = variable_mask,
         infile1 = var_file,
         infile2 = mask_file,
         outfile = outfile,

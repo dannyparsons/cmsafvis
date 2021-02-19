@@ -8,25 +8,12 @@
 #' @param xlab Label for x axis (character).
 #'
 #' @export
-#'
-#' @examples
-#'
-#' dastat <- c(1,1,2)
-#' shortDescription <- "Short description"
-#' bordercolor <- "gray20"
-#' grid_col <- "cornsilk2"
-#' linesize <- 1.5
-#' xlab <- "x label"
-#'
-#' render_hist_plot(dastat, shortDescription, grid_col, bordercolor, linesize, xlab)
-#'
 render_hist_plot <- function(dastat,
                              shortDescription,
                              grid_col,
                              bordercolor,
                              linesize,
                              xlab) {
-
   assertthat::assert_that(is.numeric(dastat))
   assertthat::assert_that(is.character(shortDescription))
   assertthat::assert_that(is.character(xlab))

@@ -18,13 +18,3 @@ render_preview_plot(spatial_lon_range, spatial_lat_range, lonRange, latRange)
 \description{
 This function creates a simple preview plot via maps::map of a given region.
 }
-\examples{
-
-render_preview_plot(
-  spatial_lon_range = c(-20, 55),
-  spatial_lat_range = c(-40, 40),
-  lonRange = c(-5, 5),
-  latRange = c(0, 15)
-)
-
-}

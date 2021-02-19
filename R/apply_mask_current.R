@@ -11,22 +11,39 @@ apply_mask_current <- function(variable,
                                climate_year_start,
                                climate_year_end,
                                start_date,
-                               end_date) {
+                               end_date,
+                               accumulate = FALSE,
+                               mean_value = FALSE) {
   start_doy <- format(start_date, format = "%j")
   finish_doy <- format(end_date, format = "%j")
 
   # output file name
-  outfile <- add_ncdf_ext(
-    construct_filename(
-      variable,
-      "Diffclim_accumulated",
-      country_code,
-      format(end_date, "%Y"),
-      "until",
-      finish_doy,
-      "mask"
+  if(accumulate){
+    outfile <- add_ncdf_ext(
+      construct_filename(
+        variable,
+        "Diffclim_accumulated",
+        country_code,
+        format(end_date, "%Y"),
+        "until",
+        finish_doy,
+        "mask"
+      )
     )
-  )
+  }else if (mean_value){
+    outfile <- add_ncdf_ext(
+      construct_filename(
+        variable,
+        "Diffclim_averaged",
+        country_code,
+        format(end_date, "%Y"),
+        "until",
+        finish_doy,
+        "mask"
+      )
+    )
+  }
+  
   outfile <- file.path(temp_dir, outfile)
 
   # Apply lon/lat values to infile.
@@ -120,21 +137,35 @@ apply_mask_current <- function(variable,
   )
 
   # Subtract climatology from infile.
-  diff_climate_file <- add_ncdf_ext(
-    construct_filename(
-      variable,
-      "Diffclim_accumulated",
-      country_code,
-      format(end_date, "%Y"),
-      "until",
-      finish_doy
+  if(accumulate){
+    diff_climate_file <- add_ncdf_ext(
+      construct_filename(
+        variable,
+        "Diffclim_accumulated",
+        country_code,
+        format(end_date, "%Y"),
+        "until",
+        finish_doy
+      )
     )
-  )
+  } else if (mean_value){
+    diff_climate_file <- add_ncdf_ext(
+      construct_filename(
+        variable,
+        "Diffclim_averaged",
+        country_code,
+        format(end_date, "%Y"),
+        "until",
+        finish_doy
+      )
+    )
+  }
+  
   diff_climate_file <- file.path(temp_dir, diff_climate_file)
 
   cmsafops::cmsaf.sub(
-    vari1 = variable,
-    vari2 = variable,
+    var1 = variable,
+    var2 = variable,
     infile1 = infile_lonlattimerange,
     infile2 = climatology_file_timerange,
     outfile = diff_climate_file,

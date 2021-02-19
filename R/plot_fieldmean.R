@@ -17,12 +17,8 @@ plot_fieldmean <- function(variable,
                            freeze_animation,
                            outfile_name,
                            adjustAccumulation,
+                           dwd_logo,
                            verbose) {
-  # Make sure that any user settings are reset when the function exits
-  # This is a requirement by CRAN
-  oldpar <- graphics::par(no.readonly = TRUE)
-  # Warning: In graphics::par(oldpar) : par(new) ohne Plot aufgerufen
-  on.exit(suppressWarnings(graphics::par(oldpar)))
 
   # Compute some parameters from arguments
   start_doy <- as.numeric(format(start_date, format = "%j"))
@@ -57,21 +53,23 @@ plot_fieldmean <- function(variable,
 
 
   # DWD Logo
-  # Size and location of the logo
-  logo.size2 <- 0.1
-  logo.x2 <- 0.92
-  logo.y2 <- 0.22
+  if(dwd_logo){
+    # Size and location of the logo
+    logo.size2 <- 0.1
+    logo.x2 <- 0.92
+    logo.y2 <- 0.22
 
-  logo_dwd_path <- system.file(
-    "extdata",
-    "DWD_logo.png",
-    package = "cmsafvis",
-    mustWork = TRUE
-  )
-  logo_dwd <- png::readPNG(logo_dwd_path)
-  dims2 <- dim(logo_dwd)[1:2]
-  AR2 <- dims2[1] / dims2[2]  * pic.width / pic.height
-
+    logo_dwd_path <- system.file(
+      "extdata",
+      "DWD_logo.png",
+      package = "cmsafvis",
+      mustWork = TRUE
+    )
+    logo_dwd <- png::readPNG(logo_dwd_path)
+    dims2 <- dim(logo_dwd)[1:2]
+    AR2 <- dims2[1] / dims2[2]  * pic.width / pic.height
+  }
+  
   # line thickness
   lwd1 <- 5
   lwd2 <- 2
@@ -297,15 +295,18 @@ plot_fieldmean <- function(variable,
                           y + (AR * size / 2),
                           interpolate = TRUE)
 
-    size <- logo.size2
-    x <- logo.x2
-    y <- logo.y2
-    graphics::rasterImage(logo_dwd,
+    if (dwd_logo){
+      size <- logo.size2
+      x <- logo.x2
+      y <- logo.y2
+    
+      graphics::rasterImage(logo_dwd,
                           x - (size / 2),
                           y - (AR2 * size / 2),
                           x + (size / 2),
                           y + (AR2 * size / 2),
                           interpolate = TRUE)
+    }
 
     if (show_extreme_climate_years && adjustAccumulation) {
       y_val_max <- yearMaxEndValue/limit_y
@@ -497,15 +498,18 @@ plot_fieldmean <- function(variable,
                                 y + (AR * size / 2),
                                 interpolate = TRUE)
 
-          size <- logo.size2
-          x <- logo.x2
-          y <- logo.y2
-          graphics::rasterImage(logo_dwd,
+          if (dwd_logo){
+            size <- logo.size2
+            x <- logo.x2
+            y <- logo.y2
+          
+            graphics::rasterImage(logo_dwd,
                                 x - (size / 2),
                                 y - (AR2 * size / 2),
                                 x + (size / 2),
                                 y + (AR2 * size / 2),
                                 interpolate = TRUE)
+          }
 
           if (show_extreme_climate_years && adjustAccumulation) {
             y_val_max <- yearMaxEndValue/limit_y
@@ -634,17 +638,20 @@ plot_fieldmean <- function(variable,
                                   y + (AR * size / 2),
                                   interpolate = TRUE)
 
-            size <- logo.size2
-            x <- logo.x2
-            y <- logo.y2
-            graphics::rasterImage(
-              logo_dwd,
-              x - (size / 2),
-              y - (AR2 * size / 2),
-              x + (size / 2),
-              y + (AR2 * size / 2),
-              interpolate = TRUE
-            )
+            if (dwd_logo){
+              size <- logo.size2
+              x <- logo.x2
+              y <- logo.y2
+
+              graphics::rasterImage(
+                logo_dwd,
+                x - (size / 2),
+                y - (AR2 * size / 2),
+                x + (size / 2),
+                y + (AR2 * size / 2),
+                interpolate = TRUE
+              )
+            }
 
             if (show_extreme_climate_years && adjustAccumulation) {
               y_val_max <- yearMaxEndValue/limit_y
@@ -680,7 +687,10 @@ plot_fieldmean <- function(variable,
                          dat_min[length(var_current_to_plot)])
 
     final_values <- data.frame(title = titles, years = standout_years, value = standout_values)
-
+    
+    ranking.values <- ranking(out_dir, variable, country_code, climate_year_start, climate_year_end, finish_doy)
+    calc.parameters.monitor.climate(final_values, ranking.values)
+  
     # Print message
     if (adjustAccumulation) {
       message("Significant values at the final time period:")

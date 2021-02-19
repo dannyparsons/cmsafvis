@@ -3,10 +3,8 @@ getColors <- function(PAL,
                       palettes,
                       num_brk,
                       reverse) {
-
   idx <- which(rownames(palettes) == PAL)
-  name <- PAL
-
+  name   <- PAL
   if (PAL == "tim.colors") {
     name <- "fields::tim.colors"
   }

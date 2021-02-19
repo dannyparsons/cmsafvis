@@ -12,7 +12,7 @@
 #'
 #' @examples
 #' set_time_locale("eng")
-#' set_time_locale("")  # reset to default
+#' Sys.setlocale("LC_TIME", "")  # reset to default
 set_time_locale <- function(language_code) {
   assert_that(is.string(language_code))
   assert_that(
@@ -47,15 +47,6 @@ set_time_locale <- function(language_code) {
   for (lang_format in language) {
     if (new != "") break
     new <- suppressWarnings(Sys.setlocale("LC_TIME", lang_format))
-  }
-
-  # Locale couldn't be set
-  if (language_code != "" && new == "") {
-    stop(paste0(
-      "Couldn't set locale to '",
-      language_code,
-      "'. Are you sure it's installed on the system?"
-    ))
   }
 
   return(new)

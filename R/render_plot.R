@@ -21,11 +21,12 @@
 #' @param num_rmax Color scale range maximium (numeric).
 #' @param num_brk Number of breaks (numeric).
 #' @param co.data Data to be plotted in R-Instat mode (data.frame).
+#' @param co.data.compare.diff Data to be plotted in compare data mode (data.frame).
 #' @param xort Centering the globe at longitude xort (numeric). Only in orthographic mode.
 #' @param yort Centering the globe at latitude yort (numeric). Only in orthographic mode.
 #' @param rort Rotation of the globe (numeric). Only in orthographic mode.
-#' @param slider1 Controling the horizontal plot position as vector of two values min and max (numeric).
-#' @param slider2 Controling the vertical plot position as vector of two values min and max (numeric).
+#' @param slider1 Controlling the horizontal plot position as vector of two values min and max (numeric).
+#' @param slider2 Controlling the vertical plot position as vector of two values min and max (numeric).
 #' @param imagewidth Width of the image (numeric).
 #' @param imageheight Height of the image (numeric).
 #' @param int Whether interior country borders should be added (logical).
@@ -43,80 +44,7 @@
 #' @param na.color The color to be used for NA values.
 #' @param textsize Textsize to be used (cex).
 #' @param palettes Color palettes to be used.
-#'
 #' @export
-#'
-#' @examples
-#' visualizeVariables <- list(
-#'  plot_dim = 2,
-#'  date.time = c(format(Sys.time(), format = "%Y-%m-%d %H:%M:%S")),
-#'  data = array(1:4, dim = c(2,2)),
-#'  min_lon = 6,
-#'  max_lon = 9,
-#'  min_lat = 49,
-#'  max_lat = 52,
-#'  lon = c(7, 8),
-#'  lat = c(50, 51),
-#'  vn = "VAR",
-#'  varname = "Example var name",
-#'  copyrightText = "Example Copyright",
-#'  unit = "example unit"
-#' )
-#'
-#' palettes <- data.frame(
-#'   type = "qual",
-#'   h1 = 0,
-#'   h2 = 360,
-#'   c1 = 35,
-#'   c2 = NA,
-#'   l1 = 85,
-#'   l2 = NA,
-#'   p1 = NA,
-#'   p2 = NA,
-#'   cmax = NA,
-#'   fixup = 1
-#' )
-#'
-#' rownames(palettes) = "Pastel 1"
-#'
-#' render_plot(
-#'  plot_rinstat = FALSE,
-#'  visualizeVariables = visualizeVariables,
-#'  visualizeDataTimestep = array(1:4, dim = c(2,2)),
-#'  nc_path_visualize = NULL,
-#'  visualizeDataMax = 4,
-#'  lon_bounds = c(6, 9),
-#'  lat_bounds = c(49, 52),
-#'  timestep = c(format(Sys.time(), format = "%Y-%m-%d")),
-#'  num_tick = 4,
-#'  num_rmin = 1,
-#'  num_rmax = 4,
-#'  num_brk = 2,
-#'  co.data = NULL,
-#'  proj = "rect",
-#'  xort = 0,
-#'  yort = 0,
-#'  rort = 0,
-#'  slider1 = c(6, 9),
-#'  slider2 = c(49, 52),
-#'  imagewidth = 800,
-#'  imageheight = 800,
-#'  location = FALSE,
-#'  int = FALSE,
-#'  text1 = "Text 1",
-#'  text2 = "Text 2",
-#'  text3 = "Text 3",
-#'  textsize = 1.2,
-#'  bordercolor = "gray20",
-#'  linesize = 1.5,
-#'  na.color = "gray80",
-#'  PAL = "Pastel 1",
-#'  palettes = palettes,
-#'  reverse = FALSE,
-#'  plot_grid = TRUE,
-#'  grid_col = "cornsilk2"
-#' )
-#'
 render_plot <- function(plot_rinstat,
                         outfile = NULL,
                         fileExtension = ".png",
@@ -135,6 +63,7 @@ render_plot <- function(plot_rinstat,
                         num_rmax,
                         num_brk,
                         co.data,
+                        co.data.compare.diff,
                         proj,
                         xort,
                         yort,
@@ -157,17 +86,10 @@ render_plot <- function(plot_rinstat,
                         reverse,
                         plot_grid,
                         grid_col) {
-  # Make sure that any user settings are reset when the function exits
-  # This is a requirement by CRAN
-  oldpar <- graphics::par(no.readonly = TRUE)
-  # Warning: In graphics::par(oldpar) : par(new) ohne Plot aufgerufen
-  on.exit(suppressWarnings(graphics::par(oldpar)))
-
   # A temp file to save the output.
   if (is.null(outfile)) {
     outfile <- tempfile(fileext = fileExtension)
   }
-
   tlab <- break_num(
     ln = num_tick,
     bn = num_tick,
@@ -424,7 +346,53 @@ render_plot <- function(plot_rinstat,
         )
       }
     }
-
+  
+    # difference plots station data in compare data step
+    if(visualizeVariables$plot_station_data == 1){   # second file -> station data
+      if(visualizeVariables$plot_type == "cmsaf.diff.absolute"){
+        vec <- seq(num_rmin, num_rmax, length.out = num_brk + 1)
+        data_station <- co.data.compare.diff$data_station_diff_absolute
+        lon_station  <- co.data.compare.diff$lon_station
+        lat_station  <- co.data.compare.diff$lat_station
+        data_station[data_station >= num_rmax] <- num_rmax
+        data_station[data_station <= num_rmin] <- num_rmin
+        for (i in seq_along(data_station)) {
+          point_col <-
+            col[findInterval(data_station[i], vec, all.inside = TRUE)]
+          graphics::points(
+            lon_station[i],
+            lat_station[i],
+            pch = 21,
+            bg = point_col,
+            col = "gray30",
+            cex = 3,
+            lwd = 2
+          )
+        }
+      }
+      if(visualizeVariables$plot_type == "cmsaf.diff.relative"){
+        vec <- seq(num_rmin, num_rmax, length.out = num_brk + 1)
+        data_station <- co.data.compare.diff$data_station_diff_relative
+        lon_station  <- co.data.compare.diff$lon_station
+        lat_station  <- co.data.compare.diff$lat_station
+        data_station[data_station >= num_rmax] <- num_rmax
+        data_station[data_station <= num_rmin] <- num_rmin
+        for (i in seq_along(data_station)) {
+          point_col <-
+            col[findInterval(data_station[i], vec, all.inside = TRUE)]
+          graphics::points(
+            lon_station[i],
+            lat_station[i],
+            pch = 21,
+            bg = point_col,
+            col = "gray30",
+            cex = 3,
+            lwd = 2
+          )
+        }
+      }
+    }
+    
     on.exit(grDevices::dev.off())
   }
 

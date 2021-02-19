@@ -8,31 +8,7 @@
 #'@param image_def Minimal image default size for width and height (numeric).
 #'@param ihsf Image height rescaling factor (numeric).
 #'
-#'@export
-#'
-#'@examples
-#'visualizeVariables <- list(
-#'  plot_dim = 2,
-#'  date.time = c(format(Sys.time(), format = "%Y-%m-%d %H:%M:%S")),
-#'  data = array(1:4, dim = c(2,2)),
-#'  min_lon = 6,
-#'  max_lon = 9,
-#'  min_lat = 49,
-#'  max_lat = 52,
-#'  lon = c(7, 8),
-#'  lat = c(50, 51),
-#'  vn = "SIS",
-#'  varname = "Surface Downwelling Shortwave Radiation",
-#'  copyrightText = "Example Copyright"
-#')
-#'
-#'ihsf <- 0.1
-#'image_def <- 800
-#'lon_bounds <- c(6, 9)
-#'lat_bounds <- c(49, 52)
-#'
-#'recalculateImageDimensions(visualizeVariables, lon_bounds, lat_bounds, image_def, ihsf)
-#'
+#' @export
 recalculateImageDimensions <- function(visualizeVariables,
                                        lon_bounds,
                                        lat_bounds,

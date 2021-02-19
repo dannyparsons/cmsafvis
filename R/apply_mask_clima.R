@@ -9,28 +9,50 @@ apply_mask_clima <-
            accumulate) {
 
     acc_string <- ""
-    if (accumulate) {
+    #mean_string <- ""
+    if (accumulate) 
+    {
       acc_string <- "accumulated_"
-    }
+    } 
+    # else if (mean_value)
+    # {
+    #   mean_string <- "averaged_"
+    # }
 
     # Build outfile path
-    outfile <- add_ncdf_ext(
-      construct_filename(
-        variable,
-        "climatology",
-        paste0(climate_year_start, "-", climate_year_end),
-        paste0(acc_string, country_code),
-        "mask"
+    #if (accumulate) 
+    #{
+      outfile <- add_ncdf_ext(
+        construct_filename(
+          variable,
+          "climatology",
+          paste0(climate_year_start, "-", climate_year_end),
+          paste0(acc_string, country_code),
+          "mask"
+        )
       )
-    )
+    #} 
+    # else if (mean_value)
+    # {
+    #   outfile <- add_ncdf_ext(
+    #     construct_filename(
+    #       variable,
+    #       "climatology",
+    #       paste0(climate_year_start, "-", climate_year_end),
+    #       paste0(mean_string, country_code),
+    #       "mask"
+    #     )
+    #   )
+    # }
+    
     outfile <- file.path(temp_dir, outfile)
 
     if (file.exists(mask_file_final)) {
       # Use add operator
       tryCatch({
         cmsafops::cmsaf.add(
-          vari1 = variable,
-          vari2 = get_country_name(country_code),
+          var1 = variable,
+          var2 = get_country_name(country_code),
           infile1 = climatology_file,
           infile2 = mask_file_final,
           outfile = outfile,

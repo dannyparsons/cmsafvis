@@ -64,38 +64,3 @@ If NULL is passed a file is created in the R session temporary directory.}
 \description{
 This function renders a 1D plot of data at one single lon / lat point.
 }
-\examples{
-visualizeVariables <- list(
- plot_dim = 1,
- date.time = seq.Date(as.Date("2020-01-01"),as.Date("2020-01-31"), by = 1),
- data = array(1:31, dim = c(1,1,31)),
- x_range = 31,
- y_label = "Y LABEL",
- lon = 7,
- lat = 50,
- vn = "VAR",
- varname = "Example var name",
- copyrightText = "Example Copyright",
- unit = "example unit",
- fitted = array(1:31, dim = c(1,1,31))
-)
-
-render_plot_1d(
-  visualizeVariables = visualizeVariables,
-  ticknumber = 6,
-  dateformat = "2",
-  analyze_timeseries = FALSE,
-  addTrend = FALSE,
-  sliderx = c(1, 31),
-  slidery = c(1, 31),
-  checkGroup_type = "1",
-  imagewidth = 800,
-  imageheight = 533,
-  text1_1d = "TEXT 1",
-  text2_1d = "TEXT 2",
-  textsize = 1.2,
-  linesize = 1.5,
-  col = "royalblue4"
-)
-
-}

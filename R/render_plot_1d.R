@@ -16,41 +16,6 @@
 #' @param col A color chosen via colourpicker::colourInput.
 #'
 #' @export
-#'
-#' @examples
-#' visualizeVariables <- list(
-#'  plot_dim = 1,
-#'  date.time = seq.Date(as.Date("2020-01-01"),as.Date("2020-01-31"), by = 1),
-#'  data = array(1:31, dim = c(1,1,31)),
-#'  x_range = 31,
-#'  y_label = "Y LABEL",
-#'  lon = 7,
-#'  lat = 50,
-#'  vn = "VAR",
-#'  varname = "Example var name",
-#'  copyrightText = "Example Copyright",
-#'  unit = "example unit",
-#'  fitted = array(1:31, dim = c(1,1,31))
-#' )
-#'
-#' render_plot_1d(
-#'   visualizeVariables = visualizeVariables,
-#'   ticknumber = 6,
-#'   dateformat = "2",
-#'   analyze_timeseries = FALSE,
-#'   addTrend = FALSE,
-#'   sliderx = c(1, 31),
-#'   slidery = c(1, 31),
-#'   checkGroup_type = "1",
-#'   imagewidth = 800,
-#'   imageheight = 533,
-#'   text1_1d = "TEXT 1",
-#'   text2_1d = "TEXT 2",
-#'   textsize = 1.2,
-#'   linesize = 1.5,
-#'   col = "royalblue4"
-#' )
-#'
 render_plot_1d <- function(outfile = NULL,
                            fileExtension = ".png",
                            visualizeVariables,
@@ -68,16 +33,10 @@ render_plot_1d <- function(outfile = NULL,
                            textsize,
                            linesize,
                            col) {
-  # Make sure that any user settings are reset when the function exits
-  # This is a requirement by CRAN
-  oldpar <- graphics::par(no.readonly = TRUE)
-  # Warning: In graphics::par(oldpar) : par(new) ohne Plot aufgerufen
-  on.exit(suppressWarnings(graphics::par(oldpar)))
-
   if (is.null(outfile)) {
     outfile <- tempfile(fileext = fileExtension)
   }
-
+  
   # prepare ticks and date formats
   dum_tick <-
     seq(1, length(visualizeVariables$date.time), length.out = ticknumber)
@@ -352,7 +311,15 @@ render_plot_1d <- function(outfile = NULL,
     on.exit(grDevices::dev.off())
   } else {
     # Generate the PNG with different line types
-
+    if(visualizeVariables$plot_type %in% c("fldcor", "fldcovar")){
+      if(visualizeVariables$plot_type == "fldcor")
+        y_label <- "Correlation in grid space"
+      if(visualizeVariables$plot_type == "fldcovar")
+        y_label <- "Covariance in grid space"
+    } else
+    {
+      y_label <- visualizeVariables$ylabel
+    }
     # In the following textsize, and linesize can be found in global.R
     if (checkGroup_type == 1) {
       iwidth  <- imagewidth
@@ -368,7 +335,7 @@ render_plot_1d <- function(outfile = NULL,
         col = "white",
         main = text1_1d,
         xlab = "time",
-        ylab = visualizeVariables$ylabel,
+        ylab = y_label,
         axes = FALSE
       )
       graphics::abline(h = 0, lwd = 1, col = "gray")
@@ -502,7 +469,7 @@ render_plot_1d <- function(outfile = NULL,
         col = "white",
         main = text1_1d,
         xlab = "time",
-        ylab = visualizeVariables$ylabel,
+        ylab = y_label,
         axes = FALSE
       )
       graphics::abline(h = 0, lwd = 1, col = "gray")
@@ -636,7 +603,7 @@ render_plot_1d <- function(outfile = NULL,
         col = "white",
         main = text1_1d,
         xlab = "time",
-        ylab = visualizeVariables$ylabel,
+        ylab = y_label,
         axes = FALSE
       )
       graphics::abline(h = 0, lwd = 1, col = "gray")
@@ -770,7 +737,7 @@ render_plot_1d <- function(outfile = NULL,
         col = "white",
         main = text1_1d,
         xlab = "time",
-        ylab = visualizeVariables$ylabel,
+        ylab = y_label,
         axes = FALSE
       )
       graphics::abline(h = 0, lwd = 1, col = "gray")
@@ -905,7 +872,7 @@ render_plot_1d <- function(outfile = NULL,
         col = "white",
         main = text1_1d,
         xlab = "time",
-        ylab = visualizeVariables$ylabel,
+        ylab = y_label,
         axes = FALSE
       )
       graphics::abline(h = 0, lwd = 1, col = "gray")

@@ -83,7 +83,7 @@ extractFinalOutfile <- function(variable,
     # Remove non reusable files
     if (file.exists(no_leap_year_file)) { file.remove(no_leap_year_file) }
   } else {
-    # Assuming we have daily data we can just continue with the given infile
+    # Assuming we have one timestep we can just continue with the given infile
     outfile <- no_leap_year_file
   }
 

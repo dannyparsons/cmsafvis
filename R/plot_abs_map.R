@@ -3,6 +3,7 @@ plot_abs_map <- function(variable,
                          climate_year_start = NULL,
                          climate_year_end = NULL,
                          infile,
+                         climatology_file = NULL,
                          out_dir,
                          start_date,
                          end_date,
@@ -17,12 +18,8 @@ plot_abs_map <- function(variable,
                          outfile_name,
                          accumulate,
                          states,
+                         dwd_logo,
                          verbose) {
-  # Make sure that any user settings are reset when the function exits
-  # This is a requirement by CRAN
-  oldpar <- graphics::par(no.readonly = TRUE)
-  # Warning: In graphics::par(oldpar) : par(new) ohne Plot aufgerufen
-  on.exit(suppressWarnings(graphics::par(oldpar)))
 
   countriesHigh <- numeric(0)  # Hack to prevent IDE warning in second next line (see https://stackoverflow.com/questions/62091444/how-to-load-data-from-other-package-in-my-package)
   utils::data("countriesHigh", package = "rworldxtra", envir = environment())
@@ -296,25 +293,27 @@ plot_abs_map <- function(variable,
   AR <- dims[1] / dims[2] * pic.width / pic.height
 
   # DWD Logo
-  logo.size2 <- 0.07
-  logo.x2 <- 0.95
-  logo.y2 <- 0.14
+  if (dwd_logo){
+    logo.size2 <- 0.07
+    logo.x2 <- 0.95
+    logo.y2 <- 0.14
 
-  # DWD Logo
-  #logo.size2 <- 0.06
-  #logo.x2 <- 0.95
-  #logo.y2 <- 0.25
+    # DWD Logo
+    #logo.size2 <- 0.06
+    #logo.x2 <- 0.95
+    #logo.y2 <- 0.25
 
-  logo_dwd_path <- system.file(
-    "extdata",
-    "DWD_logo.png",
-    package = "cmsafvis",
-    mustWork = TRUE
-  )
-  logo_dwd <- png::readPNG(logo_dwd_path)
-  dims2 <- dim(logo_dwd)[1:2]
-  AR2 <- dims2[1] / dims2[2] * pic.width / pic.height
-
+    logo_dwd_path <- system.file(
+      "extdata",
+      "DWD_logo.png",
+      package = "cmsafvis",
+      mustWork = TRUE
+    )
+    logo_dwd <- png::readPNG(logo_dwd_path)
+    dims2 <- dim(logo_dwd)[1:2]
+    AR2 <- dims2[1] / dims2[2] * pic.width / pic.height
+  }
+  
   if (country_code == "EUR") {
     logo.size2 <- 0.04
     logo.x2 <- 0.97
@@ -388,15 +387,17 @@ plot_abs_map <- function(variable,
                           y + (AR * size / 2),
                           interpolate = TRUE)
 
-    size <- logo.size2
-    x <- logo.x2
-    y <- logo.y2
-    graphics::rasterImage(logo_dwd,
+    if (dwd_logo){
+      size <- logo.size2
+      x <- logo.x2
+      y <- logo.y2
+      graphics::rasterImage(logo_dwd,
                           x - (size / 2),
                           y - (AR2 * size / 2),
                           x + (size / 2),
                           y + (AR2 * size / 2),
                           interpolate = TRUE)
+    }
 
     if (plot_type == "climatology_map" && set_time) {
       # Duration (time span) is only needed if not the entire year is used.
@@ -535,15 +536,17 @@ plot_abs_map <- function(variable,
                                 y + (AR * size / 2),
                                 interpolate = TRUE)
 
-          size <- logo.size2
-          x <- logo.x2
-          y <- logo.y2
-          graphics::rasterImage(logo_dwd,
+          if (dwd_logo){
+            size <- logo.size2
+            x <- logo.x2
+            y <- logo.y2
+            graphics::rasterImage(logo_dwd,
                                 x - (size / 2),
                                 y - (AR2 * size / 2),
                                 x + (size / 2),
                                 y + (AR2 * size / 2),
                                 interpolate = TRUE)
+          }
 
           # Legend for time span (duration)
           if (plot_type == "climatology_map") {
@@ -680,17 +683,19 @@ plot_abs_map <- function(variable,
                                   y + (AR * size / 2),
                                   interpolate = TRUE)
 
-            size <- logo.size2
-            x <- logo.x2
-            y <- logo.y2
-            graphics::rasterImage(
-              logo_dwd,
-              x - (size / 2),
-              y - (AR2 * size / 2),
-              x + (size / 2),
-              y + (AR2 * size / 2),
-              interpolate = TRUE
-            )
+            if (dwd_logo){
+              size <- logo.size2
+              x <- logo.x2
+              y <- logo.y2
+              graphics::rasterImage(
+                logo_dwd,
+                x - (size / 2),
+                y - (AR2 * size / 2),
+                x + (size / 2),
+                y + (AR2 * size / 2),
+                interpolate = TRUE
+              )
+            }
 
             # Legend for time span (duration)
             if (plot_type == "climatology_map") {
@@ -751,4 +756,108 @@ plot_abs_map <- function(variable,
       } # end of saveVideo expr
     ) # end of saveVideo
   } #end of if
+  
+  
+  if(plot_type == "absolute_map")
+  {
+    # calc monitor climate parameters
+    tmp_climate_dir <- file.path(tempdir(), "tmp_climate_dir")
+    # remove if it exists
+    if (dir.exists(tmp_climate_dir)) {
+      unlink(tmp_climate_dir, recursive = TRUE)
+    }
+    # create new temp dic
+    if (!dir.exists(tmp_climate_dir)) {
+      dir.create(tmp_climate_dir)
+    }
+    
+    # Ranking
+    # tmp_ranking <- file.path(tmp_climate_dir, paste0("tmp_ranking.nc"))
+    # cmsafops::monmean(var = variable, infile = infile, outfile = tmp_ranking, overwrite = TRUE)
+    # tmp_ranking_1 <- file.path(tmp_climate_dir, paste0("tmp_ranking_1.nc"))
+    # cmsafops::yearmean(var = variable, infile = tmp_ranking, outfile = tmp_ranking_1, overwrite = TRUE)
+    # tmp_ranking_final <- file.path(tmp_climate_dir, paste0("tmp_ranking_final.nc"))
+    # cmsafops::fldmean(var = variable, infile = tmp_ranking_1, outfile = tmp_ranking_final, overwrite = TRUE)
+    # nc_in_1 <- nc_open(tmp_ranking_final)
+    # dum_dat_ranking <- ncvar_get(nc_in_1, variable, collapse_degen = FALSE)
+    # nc_close(nc_in_1)
+    # 
+    # file_data <- cmsafops::read_file(tmp_ranking_final, variable)
+    # file_data$variable$prec <- "float"
+    # years_all <- cmsafops::get_date_time(file_data$dimension_data$t, file_data$time_info$units)$years
+    # 
+    # ranking <- data.frame(years_all, as.vector(dum_dat_ranking))
+    # names(ranking) <- c("Year","Value")
+    
+    titles <- c("Analyzed year", "Maximum", "Minimum")
+    
+    standout_years <- c(format(start_date, format = "%Y"),
+                        "-",
+                        "-")
+    
+    standout_values <- c(mean(field_source, na.rm = TRUE), max(field_source, na.rm = TRUE), min(field_source, na.rm = TRUE))
+    
+    final_values <- data.frame(title = titles, years = standout_years, value = standout_values)
+    calc.parameters.monitor.climate(final_values)#, ranking[order(ranking$Value),])
+    
+    # remove if it exists
+    if (dir.exists(tmp_climate_dir)) {
+      unlink(tmp_climate_dir, recursive = TRUE)
+    }
+  }
+  else{
+    # calc monitor climate parameters
+    tmp_climate_dir <- file.path(tempdir(), "tmp_climate_dir")
+    # remove if it exists
+    if (dir.exists(tmp_climate_dir)) {
+      unlink(tmp_climate_dir, recursive = TRUE)
+    }
+    # create new temp dic
+    if (!dir.exists(tmp_climate_dir)) {
+      dir.create(tmp_climate_dir)
+    }
+    
+    # Clim mean value
+    tmp_clim_mean_value <- file.path(tmp_climate_dir, paste0("tmp_clim_mean_value.nc"))
+    cmsafops::fldmean(var = variable, infile = climatology_file, outfile = tmp_clim_mean_value, overwrite = TRUE)
+    nc_in <- ncdf4::nc_open(tmp_clim_mean_value)
+    dum_dat_mean <- ncdf4::ncvar_get(nc_in, variable, collapse_degen = FALSE)
+    ncdf4::nc_close(nc_in)
+    
+    # Ranking
+    # tmp_ranking <- file.path(tmp_climate_dir, paste0("tmp_ranking.nc"))
+    # cmsafops::monmean(var = variable, infile = infile, outfile = tmp_ranking, overwrite = TRUE)
+    # tmp_ranking_1 <- file.path(tmp_climate_dir, paste0("tmp_ranking_1.nc"))
+    # cmsafops::timselmean(var = variable, nts = 12, infile = tmp_ranking, outfile = tmp_ranking_1, overwrite = TRUE)
+    # tmp_ranking_final <- file.path(tmp_climate_dir, paste0("tmp_ranking_final.nc"))
+    # cmsafops::fldmean(var = variable, infile = tmp_ranking_1, outfile = tmp_ranking_final, overwrite = TRUE)
+    # nc_in_1 <- ncdf4::nc_open(tmp_ranking_final)
+    # dum_dat_ranking <- ncdf4::ncvar_get(nc_in_1, variable, collapse_degen = FALSE)
+    # ncdf4::nc_close(nc_in_1)
+    # 
+    # file_data <- cmsafops::read_file(tmp_ranking_final, variable)
+    # file_data$variable$prec <- "float"
+    # years_all <- cmsafops::get_date_time(file_data$dimension_data$t, file_data$time_info$units)$years
+    # 
+    # ranking <- data.frame(years_all, as.vector(dum_dat_ranking))
+    # names(ranking) <- c("Year","Value")
+    
+    titles <- c("Analyzed year", "Climatology Mean Value", "Maximum", "Minimum")
+    
+    standout_years <- c(format(start_date, format = "%Y"),
+                        paste(climate_year_start, climate_year_end, sep = " - "),
+                        "-",
+                        "-")
+    
+    standout_values <- c(mean(field_source, na.rm = TRUE), mean(dum_dat_mean, na.rm = TRUE), max(field_source, na.rm = TRUE), min(field_source, na.rm = TRUE))
+    
+    final_values <- data.frame(title = titles, years = standout_years, value = standout_values)
+    calc.parameters.monitor.climate(final_values)#, ranking[order(ranking$Value),])
+    
+    # remove if it exists
+    if (dir.exists(tmp_climate_dir)) {
+      unlink(tmp_climate_dir, recursive = TRUE)
+    }
+  }
+  
 } # end of function

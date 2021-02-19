@@ -45,6 +45,7 @@ calculate_climatology <- function(
     verbose = verbose
   )
 
+  # outfile: [variable]_climatology_[climate_year_start-climate_year_end]_[acc_str]_[country_code]
   cut_climate(
     variable = variable,
     outfile = climatology_file,

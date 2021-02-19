@@ -29,21 +29,3 @@ render_instat_plot(
 \description{
 This function creates a simple r-instat plot.
 }
-\examples{
-co.data <- list(
-  lon_station = c(1,2,3),
-  lat_station = c(10,20,30),
-  data_station = c(1,2,3),
-  data_sat = c(4,3,2)
-)
-
-render_instat_plot(
-  co.data = co.data,
-  shortDescription = "thing 1 vs thing 2",
-  grid_col = "cornsilk2",
-  bordercolor = "gray20",
-  linesize = 1.2,
-  ylab = "y label"
-)
-
-}

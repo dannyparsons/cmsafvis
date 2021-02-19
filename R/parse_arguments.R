@@ -7,6 +7,7 @@ parse_arguments <- function(plot_type,
                             config = NULL,
                             variable = NULL,
                             accumulate = FALSE,
+                            mean_value = FALSE,
                             infile = NULL,
                             temp_dir = tempdir(),
                             out_dir = getwd(),
@@ -34,6 +35,7 @@ parse_arguments <- function(plot_type,
                             states = FALSE,
                             attach = FALSE,
                             infile_attach = "auto",
+                            dwd_logo = FALSE,
                             verbose = TRUE) {
   #### Deal with config ####
   if (is.null(config)) {
@@ -395,7 +397,7 @@ parse_arguments <- function(plot_type,
         configParams$keep_files,
         error = function(cond) {
           stop(paste0(
-            "Can't read 'accumulate' from config file: ",
+            "Can't read 'keep_files' from config file: ",
             normalizePath(config)
           ))
         }
@@ -420,10 +422,10 @@ parse_arguments <- function(plot_type,
           ))
         }
       )
+    }
 
-      if (!is.null(country_code_config)) {
-        country_code <- country_code_config
-      }
+    if (!is.null(country_code_config)) {
+      country_code <- country_code_config
     }
   }
 
@@ -590,17 +592,27 @@ parse_arguments <- function(plot_type,
     end_date <- as.Date(end_date)
   }
 
-  assert_that(end_date >= start_date)
+  if(plot_type %in% c("warming_stripes_plot", "time_series_plot", "trend_plot")){
+    assert_that(end_date >= start_date)
 
-  start_year <- format(start_date, "%Y")
-  end_year <- format(end_date, "%Y")
-  assert_that(start_year == end_year,
-              msg = "Year of start_date not equal to year of end_date")
-  if (!accumulate) {
+    start_year <- format(start_date, "%Y")
+    end_year <- format(end_date, "%Y")
+  }else{
+    assert_that(end_date >= start_date)
+    
+    start_year <- format(start_date, "%Y")
+    end_year <- format(end_date, "%Y")
+    assert_that(start_year == end_year,
+                msg = "Year of start_date not equal to year of end_date")
+  }
+  
+  if (!(accumulate || mean_value)) {
     if (output_format == "graphic") {
       if (start_date != end_date) {
         if (plot_type != "fieldmean_plot") {
-          stop("You are trying to create a multi-day graphic of non accumulated data. This is not allowed. Either accumulate the data or choose start_date equal to end_date.")
+          if(!(plot_type %in% c("warming_stripes_plot", "time_series_plot", "trend_plot"))){
+            stop("You are trying to create a multi-day graphic of non accumulated data. This is not allowed. Either accumulate the data or chose start_date equal to end_date.")
+          }
         }
       }
     }
@@ -652,6 +664,26 @@ parse_arguments <- function(plot_type,
     )
   }
 
+  #### dwd_logo ####
+  if (missing(dwd_logo)) {
+    if (configRead) {
+      dwd_logo <- tryCatch(
+        configParams$states,
+        error = function(cond) {
+          stop(paste0(
+            "Can't read 'dwd_logo' from config file: ",
+            normalizePath(config)
+          ))
+        }
+      )
+    }
+    if (!configRead || is.null(dwd_logo)) {
+      dwd_logo <- FALSE
+    }
+  }
+  
+  assert_that(is.flag(dwd_logo))
+  
   #### verbose ####
   if (missing(verbose)) {
     if (configRead) {
@@ -741,9 +773,9 @@ parse_arguments <- function(plot_type,
 
   # Check consistency
   if (output_format == "graphic") {
-    if (!accumulate) {
+    if (!(accumulate || mean_value)) {
       if (start_date != end_date) {
-        if (plot_type != "fieldmean_plot")
+        if (!(plot_type %in% c("fieldmean_plot", "warming_stripes_plot", "time_series_plot", "trend_plot")))
         stop("Creating graphics of non-accumulated data can only be done for a single day! Please choose start_date == end_date or select output_format = animation.")
       }
     }
@@ -788,6 +820,7 @@ parse_arguments <- function(plot_type,
   result <- list(
     variable = variable,
     accumulate = accumulate,
+    mean_value = mean_value,
     temp_dir = temp_dir,
     infile = infile,
     climate_dir = climate_dir,
@@ -816,6 +849,7 @@ parse_arguments <- function(plot_type,
     attach = attach,
     infile_attach = infile_attach,
     new_infile = new_infile,
+    dwd_logo = dwd_logo,
     verbose = verbose
   )
 

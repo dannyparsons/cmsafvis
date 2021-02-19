@@ -29,15 +29,3 @@ render_hist_plot(
 \description{
 This routine was implemented for creating histograms in the CM SAF R Toolbox.
 }
-\examples{
-
-dastat <- c(1,1,2)
-shortDescription <- "Short description"
-bordercolor <- "gray20"
-grid_col <- "cornsilk2"
-linesize <- 1.5
-xlab <- "x label"
-
-render_hist_plot(dastat, shortDescription, grid_col, bordercolor, linesize, xlab)
-
-}

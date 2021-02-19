@@ -8,36 +8,12 @@
 #' @param ylab Label for y axis (character).
 #'
 #' @export
-#'
-#' @examples
-#' co.data <- list(
-#'   lon_station = c(1,2,3),
-#'   lat_station = c(10,20,30),
-#'   data_station = c(1,2,3),
-#'   data_sat = c(4,3,2)
-#' )
-#'
-#' render_instat_plot(
-#'   co.data = co.data,
-#'   shortDescription = "thing 1 vs thing 2",
-#'   grid_col = "cornsilk2",
-#'   bordercolor = "gray20",
-#'   linesize = 1.2,
-#'   ylab = "y label"
-#' )
-#'
 render_instat_plot <- function(co.data,
                                shortDescription,
                                grid_col,
                                bordercolor,
                                linesize,
                                ylab) {
-  # Make sure that any user settings are reset when the function exits
-  # This is a requirement by CRAN
-  oldpar <- graphics::par(no.readonly = TRUE)
-  # Warning: In graphics::par(oldpar) : par(new) ohne Plot aufgerufen
-  on.exit(suppressWarnings(graphics::par(oldpar)))
-
   assertthat::assert_that(is.character(shortDescription))
   assertthat::assert_that(is.character(ylab))
 

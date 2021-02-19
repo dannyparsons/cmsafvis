@@ -8,21 +8,10 @@
 #' @param latRange Array containing two values for latitude min and max (numeric).
 #'
 #' @export
-#'
-#' @examples
-#'
-#' render_preview_plot(
-#'   spatial_lon_range = c(-20, 55),
-#'   spatial_lat_range = c(-40, 40),
-#'   lonRange = c(-5, 5),
-#'   latRange = c(0, 15)
-#' )
-#'
 render_preview_plot <- function(spatial_lon_range,
                                 spatial_lat_range,
                                 lonRange,
                                 latRange) {
-
   x_lims <- spatial_lon_range + c(-10, 10)
   y_lims <- spatial_lat_range + c(-10, 10)
 

@@ -63,7 +63,16 @@ fieldmean_ensemble <-
               variable,
               climate_year,
               "timsum"))
-        } else {
+        } 
+        # else if (mean_value)
+        # {
+        #   infile <- add_ncdf_ext(
+        #     construct_filename(
+        #       variable,
+        #       climate_year,
+        #       "timmean"))
+        # } 
+        else {
           infile <- add_ncdf_ext(construct_filename(variable,
                                                     climate_year))
         }
@@ -78,6 +87,7 @@ fieldmean_ensemble <-
             climate_year_start = climate_year_start,
             climate_year_end = climate_year_end,
             accumulate = accumulate,
+            #mean_value = mean_value,
             verbose = verbose
           )
         }
@@ -132,9 +142,7 @@ fieldmean_ensemble <-
         file.remove(tmpfile)
       }
     }
-    if (verbose) {
-      pb$update(1)  # Finishes the progress bar
-    }
+    pb$update(1)  # Finishes the progress bar
 
     # Will return the outfile from the latest year... Not sure if this is what we want...
     # These files are only used in the plotting process (and the return value of this function call is never caught).
