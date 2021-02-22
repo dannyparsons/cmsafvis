@@ -20,6 +20,11 @@ plot_abs_map <- function(variable,
                          states,
                          dwd_logo,
                          verbose) {
+  # Make sure that any user settings are reset when the function exits
+  # This is a requirement by CRAN
+  oldpar <- graphics::par(no.readonly = TRUE)
+  # Warning: In graphics::par(oldpar) : par(new) ohne Plot aufgerufen
+  on.exit(suppressWarnings(graphics::par(oldpar)))
 
   countriesHigh <- numeric(0)  # Hack to prevent IDE warning in second next line (see https://stackoverflow.com/questions/62091444/how-to-load-data-from-other-package-in-my-package)
   utils::data("countriesHigh", package = "rworldxtra", envir = environment())

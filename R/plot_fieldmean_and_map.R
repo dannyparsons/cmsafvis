@@ -24,6 +24,11 @@ plot_fieldmean_and_map <- function(variable,
                                    states,
                                    dwd_logo,
                                    verbose) {
+  # Make sure that any user settings are reset when the function exits
+  # This is a requirement by CRAN
+  oldpar <- graphics::par(no.readonly = TRUE)
+  # Warning: In graphics::par(oldpar) : par(new) ohne Plot aufgerufen
+  on.exit(suppressWarnings(graphics::par(oldpar)))
 
   # Dimensions of pic
   pic.width <- 900

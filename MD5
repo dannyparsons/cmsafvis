@@ -1,4 +1,4 @@
-70529bd1d0aa412ecdbda321fc6bf771 *DESCRIPTION
+66ea3a3d5a633eb4bc6329c89d9c1553 *DESCRIPTION
 4440d6c402de589cd213aa77ca1a4bda *NAMESPACE
 6c0b4d3d44a4d1c110f6b364a43d4045 *NEWS.md
 fc19a6479f34f473561a2fedc370d0cf *R/ColorspacePrivates.R
@@ -51,10 +51,10 @@ d94f6a5d2df71458406a991ac0615a63 *R/is_country.R
 c472dc54721d78c75672e221934f012b *R/is_valid_countrycode.R
 f1560f1c682f1f6fe6eaee32709c3ffe *R/monitor_climate.R
 ac6dbec812ef8c032998515c339897d1 *R/parse_arguments.R
-bbbd4edd303b6ea726f68efc0be533b4 *R/plot_abs_map.R
+2bd7738039848b4ad54ad4051d46d4c3 *R/plot_abs_map.R
 63ad5f886c234d0068f704560a2c023b *R/plot_abs_map_mean.R
-374f7787aafb00749cc63087e7e4407f *R/plot_fieldmean.R
-e03ea72f7e3abf46c038927f6e9f190c *R/plot_fieldmean_and_map.R
+b628be31aa528db5669006fd06307b24 *R/plot_fieldmean.R
+0c6017bc788a4d5f3a31bf2f99d39cb3 *R/plot_fieldmean_and_map.R
 5bf60b060ed308d68f0a913f7c2e672b *R/plot_labeling.R
 cf21dd6133eec25071cd9a426c0605d0 *R/plot_time_series.R
 51c1e7eb8a39d3280214ce7d8da9b052 *R/plot_trend.R
@@ -75,12 +75,12 @@ ad98a75ae2605a9cf6b36e8ea4f34829 *R/render_plot_hovmoller.R
 a1e999fe79be39f16356f73ba73f7e0d *R/render_plot_time_series_compare.R
 d1f1ea3163772fe6edc1bdce67f40335 *R/render_preview_plot.R
 3f100241bf6d0936c35908c47557a012 *R/render_region_plot.R
-d7f8258b1af5594ac1c3cdabeb5ef1e9 *R/set_time_locale.R
+79e8322394edaf937107091f55af1fc7 *R/set_time_locale.R
 a1fef58e2e793e99011840fd0a5ce63c *R/sysdata.rda
 842a9c41e64fed6e0be32c1397f0e969 *R/time_series_plot.R
 d3df86603693ea3be0875e5da1b1cc0e *R/trend_plot.R
 e52d1190e5856c27bc6a4b7f042c393d *R/warming_stripes_plot.R
-40e673e9bd46977813ce151aae767c3c *build/partial.rdb
+3dce8b22ee99bceec6e5ed513b9d1f66 *build/partial.rdb
 09822e7359c1b70d5ffbe5e02a2c7290 *inst/WORDLIST
 ecd5d32528f54448439f86274dc992be *inst/extdata/CMSAF_NoName_Black.png
 c607a52c29a6c0d919399ce99e9feeac *inst/extdata/CMSAF_NoName_Colour_crop.png
@@ -121,4 +121,4 @@ d9e5eb0dd606088fdbf743d0f844f9e1 *man/warming_stripes_plot.Rd
 2926098c9266960cfaf9613ac0af809e *tests/spelling.R
 4c29f439cc904464dee7cc208d351c95 *tests/spelling.Rout.save
 42822e810fa72eae984908cd3434752b *tests/testthat.R
-b10b9293fd88a4b6b07a62f06a38f3b0 *tests/testthat/test-set_time_locale.R
+c1f1b72cc47db897a36f67afe4770da1 *tests/testthat/test-set_time_locale.R

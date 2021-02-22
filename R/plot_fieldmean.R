@@ -19,6 +19,11 @@ plot_fieldmean <- function(variable,
                            adjustAccumulation,
                            dwd_logo,
                            verbose) {
+  # Make sure that any user settings are reset when the function exits
+  # This is a requirement by CRAN
+  oldpar <- graphics::par(no.readonly = TRUE)
+  # Warning: In graphics::par(oldpar) : par(new) ohne Plot aufgerufen
+  on.exit(suppressWarnings(graphics::par(oldpar)))
 
   # Compute some parameters from arguments
   start_doy <- as.numeric(format(start_date, format = "%j"))
