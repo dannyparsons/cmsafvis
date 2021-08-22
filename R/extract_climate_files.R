@@ -163,5 +163,5 @@ extract_climate_files <- function(
     #   # TODO
     # }
   }
-  pb$update(1)  # Finishes the progress bar
+  if (verbose) pb$update(1)  # Finishes the progress bar
 }

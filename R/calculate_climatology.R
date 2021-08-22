@@ -192,8 +192,7 @@ merge_climatology <- function(
     var = variable,
     infile = tmpfile,
     outfile = outfile,
-    overwrite = TRUE,
-    nc = nc)
+    overwrite = TRUE)
 
   # Clean up
   file.remove(tmpfile)
