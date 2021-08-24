@@ -35,7 +35,8 @@ render_region_plot(
   plot_grid,
   grid_col,
   image_def,
-  ihsf
+  ihsf,
+  nc = NULL
 )
 }
 \arguments{
@@ -62,7 +63,7 @@ If NULL is passed a file is created in the R session temporary directory.}
 
 \item{division}{Division to contain region (either 'COUNTRY' or something coherent to region_data).}
 
-\item{selectedRegion}{The region to be cropped according to division. If \code{division == "COUNTRY"}, the country's \href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{3-character ISO code} should be used. Otherwise it has to fit to the passed region data.}
+\item{selectedRegion}{The region to be cropped according to division. If `division == "COUNTRY"`, the country's [3-character ISO code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) should be used. Otherwise it has to fit to the passed region data.}
 
 \item{region_data}{If Division is not 'COUNTRY' then region_data has to contain spatial data of the given division.}
 
@@ -101,6 +102,9 @@ If NULL is passed a file is created in the R session temporary directory.}
 \item{image_def}{Default size (positive numeric).}
 
 \item{ihsf}{Image height scaling factor (positive numeric).}
+
+\item{nc}{Alternatively to `infile` you can instead specify the input as an
+object of class `ncdf4` (as returned from `ncdf4::nc_open`).}
 }
 \description{
 This function generates a plot of within a certain region (e.g. a country).

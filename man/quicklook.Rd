@@ -25,11 +25,11 @@ quicklook(
 \item{outpath}{directory in which to save the output files.
 (character).}
 
-\item{jpeg_quality}{jpeg quality for the image in percent, see \link[grDevices:png]{grDevices::jpeg()}}
+\item{jpeg_quality}{jpeg quality for the image in percent, see [grDevices::jpeg()][grDevices::png()]}
 
-\item{dpi}{resolution of the image in dots per inch, see \link[grDevices:png]{grDevices::jpeg()}}
+\item{dpi}{resolution of the image in dots per inch, see [grDevices::jpeg()][grDevices::png()]}
 
-\item{iwidth}{width of the resulting image in pixels, see \link[grDevices:png]{grDevices::jpeg()}}
+\item{iwidth}{width of the resulting image in pixels, see [grDevices::jpeg()][grDevices::png()]}
 
 \item{logo}{logical; should the cmsaf logo be added to the plot?}
 
@@ -44,5 +44,5 @@ A jpeg file with the same name as the original NetCDF file.
 }
 \description{
 The function creates a plot of the variables in NetCDF file(s) specified in the config file.
-Only NetCDF files that conform to the \href{https://www.cmsaf.eu/EN/Products/NamingConvention/Naming_Convention_node.html}{CMSAF naming convention} are supported.
+Only NetCDF files that conform to the [CMSAF naming convention](https://www.cmsaf.eu/EN/Products/NamingConvention/Naming_Convention_node.html) are supported.
 }

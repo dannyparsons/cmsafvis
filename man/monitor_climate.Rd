@@ -40,7 +40,8 @@ monitor_climate(
   analyze_method = TRUE,
   selected_number = 1,
   dwd_logo = FALSE,
-  verbose = TRUE
+  verbose = TRUE,
+  nc = NULL
 )
 }
 \arguments{
@@ -124,10 +125,13 @@ If attach is false, this will be ignored(character).}
 \item{dwd_logo}{Whether to add the DWD logo (logical).}
 
 \item{verbose}{Whether to display progress messages (logical).}
+
+\item{nc}{Alternatively to `infile` you can instead specify the input as an
+object of class `ncdf4` (as returned from `ncdf4::nc_open`).}
 }
 \description{
 This plotting routine generates graphical output of the evolution of
-the given variable within the given time range and area. The intended
+the given variable within the given time range and area. The intended 
 application is for daily accumulated data, such as sunshine duration.
 Dependent on the output format a PNG or MP4 is created.
 }

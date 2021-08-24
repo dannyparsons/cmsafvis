@@ -28,7 +28,8 @@ trend_plot(
   states = FALSE,
   attach = FALSE,
   infile_attach = "auto",
-  verbose = TRUE
+  verbose = TRUE,
+  nc = NULL
 )
 }
 \arguments{
@@ -85,6 +86,9 @@ If false, all intermediate results are deleted, otherwise all are kept. Keeping 
 If attach is false, this will be ignored(character).}
 
 \item{verbose}{Whether to display progress messages (logical).}
+
+\item{nc}{Alternatively to `infile` you can instead specify the input as an
+object of class `ncdf4` (as returned from `ncdf4::nc_open`).}
 }
 \description{
 This plotting routine generates graphical output for

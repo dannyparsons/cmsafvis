@@ -32,7 +32,8 @@ absolute_map(
   attach = FALSE,
   infile_attach = "auto",
   dwd_logo = FALSE,
-  verbose = TRUE
+  verbose = TRUE,
+  nc = NULL
 )
 }
 \arguments{
@@ -98,6 +99,9 @@ If attach is false, this will be ignored(character).}
 \item{dwd_logo}{Whether to add the DWD logo (logical).}
 
 \item{verbose}{Whether to display progress messages (logical).}
+
+\item{nc}{Alternatively to `infile` you can instead specify the input as an
+object of class `ncdf4` (as returned from `ncdf4::nc_open`).}
 }
 \description{
 This plotting routine generates graphical output for
@@ -108,6 +112,6 @@ Dependent on the output format a PNG or MP4 is created.
 You can pass a YAML config file and/or specify the arguments directly.
 Argument prioritization is done in the following way:
 Direct argument > config argument > default argument.
-Thus, if you pass a existing config file but also want to modify a specific
+Thus, if you pass a existing config file but also want to modify a specific 
 argument you can do that easily.
 }

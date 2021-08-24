@@ -15,7 +15,9 @@ cmsaf.diff(
   nc34 = 4,
   overwrite = FALSE,
   verbose = FALSE,
-  toolbox = FALSE
+  toolbox = FALSE,
+  nc1 = NULL,
+  nc2 = NULL
 )
 }
 \arguments{
@@ -32,7 +34,7 @@ cmsaf.diff(
 \item{outfile}{Filename of output NetCDF file. This may include the directory
 (character).}
 
-\item{plot.out}{logical; if TRUE, the plot will be stored in the same folder as outfile.
+\item{plot.out}{logical; if TRUE, the plot will be stored in the same folder as outfile. 
 If FALSE, the plot will not be saved.}
 
 \item{relative}{logical; if TRUE, plot a relative difference plot}
@@ -44,8 +46,14 @@ in NetCDFv3 format (numeric). Default output is NetCDFv4.}
 
 \item{verbose}{logical; if TRUE, progress messages are shown}
 
-\item{toolbox}{logical; if TRUE, toolbox mode enabled. The two files are adjusted in space
+\item{toolbox}{logical; if TRUE, toolbox mode enabled. The two files are adjusted in space 
 and time so that they can be plotted.}
+
+\item{nc1}{Alternatively to `infile1` you can instead specify the input as an
+object of class `ncdf4` (as returned from `ncdf4::nc_open`).}
+
+\item{nc2}{Alternatively to `infile2` you can instead specify the input as an
+object of class `ncdf4` (as returned from `ncdf4::nc_open`).}
 }
 \value{
 A NetCDF file is written.
